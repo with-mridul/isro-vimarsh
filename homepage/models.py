@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class IsroAchievemnt(models.Model):
+class IsroAchievement(models.Model):
     # For Isro history timeline
     year = models.IntegerField()
     title = models.CharField(max_length=300)

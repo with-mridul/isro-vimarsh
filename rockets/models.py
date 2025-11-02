@@ -30,7 +30,7 @@ class Rocket(models.Model):
     #Media
     image = models.ImageField(upload_to='rockets/', null=True, blank=True)
 
-    def sucess_rate(self):
+    def success_rate(self):
         if self.total_launches == 0:
             return 0
         return round((self.successful_launches/ self.total_launches) *100, 2)
