@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from missions.models import Mission
 from news.models import NewsArticle
-from .models import ISROAchievement
+from .models import IsroAchievement
 
 def home(request):
     featured_missions = Mission.objects.filter(featured_on_homepage=True).order_by('homepage_order')[:3]
@@ -14,7 +14,7 @@ def home(request):
     return render(request, 'homepage/home.html', context)
 
 def history(request):
-    achievements = ISROAchievement.objects.all().order_by('year')
+    achievements = IsroAchievement.objects.all().order_by('year')
     context = {
         'achievements': achievements,
     }

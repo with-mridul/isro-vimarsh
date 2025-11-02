@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ rocket.name }} - ISRO VIMARSH{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                {% if rocket.image %}
+                <img src="{{ rocket.image.url }}" class="img-fluid rounded" alt="{{ rocket.name }}">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h1 class="text-warning">{{ rocket.name }}</h1>
+                <h3 class="text-muted">{{ rocket.full_name }}</h3>
+                <p class="lead">{{ rocket.description }}</p>
+                
+                <h4 class="mt-4 text-warning">Specifications</h4>
+                <table class="table table-dark table-striped">
+                    <tr><th>Height</th><td>{{ rocket.height }} meters</td></tr>
+                    <tr><th>Diameter</th><td>{{ rocket.diameter }} meters</td></tr>
+                    <tr><th>Mass</th><td>{{ rocket.mass|floatformat:0 }} kg</td></tr>
+                    <tr><th>Stages</th><td>{{ rocket.stages }}</td></tr>
+                    <tr><th>Payload to LEO</th><td>{{ rocket.payload_capacity_leo }} kg</td></tr>
+                    {% if rocket.payload_capacity_gto %}
+                    <tr><th>Payload to GTO</th><td>{{ rocket.payload_capacity_gto }} kg</td></tr>
+                    {% endif %}
+                </table>
+                
+                <h4 class="mt-4 text-warning">Launch Record</h4>
+                <table class="table table-dark table-striped">
+                    <tr><th>First Launch</th><td>{{ rocket.first_launch|date:"F d, Y"|default:"N/A" }}</td></tr>
+                    <tr><th>Total Launches</th><td>{{ rocket.total_launches }}</td></tr>
+                    <tr><th>Successful Launches</th><td>{{ rocket.successful_launches }}</td></tr>
+                    <tr><th>Success Rate</th><td>{{ rocket.success_rate }}%</td></tr>
+                    <tr><th>Status</th><td><span class="badge bg-success">{{ rocket.get_status_display }}</span></td></tr>
+                </table>
+                
+                <a href="{% url 'rockets:rocket_list' %}" class="btn btn-secondary mt-3">Back to Rockets</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

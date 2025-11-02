@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ISRO VIMARSH - Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <h1>Welcome to ISRO VIMARSH</h1>
+        <p>Exploring India's Journey to Space</p>
+    </div>
+</section>
+
+<!-- Featured Missions -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Featured Missions</h2>
+        <div class="row">
+            {% for mission in featured_missions %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if mission.mission_image %}
+                    <img src="{{ mission.mission_image.url }}" class="card-img-top" alt="{{ mission.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ mission.name }}</h5>
+                        <p class="card-text">{{ mission.description|truncatewords:20 }}</p>
+                        <span class="badge bg-primary">{{ mission.get_status_display }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center">No featured missions yet. Add some in the admin panel!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Latest News -->
+<section class="py-5 bg-dark">
+    <div class="container">
+        <h2 class="section-title">Latest News</h2>
+        <div class="row">
+            {% for article in latest_news %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if article.featured_image %}
+                    <img src="{{ article.featured_image.url }}" class="card-img-top" alt="{{ article.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.title|truncatewords:10 }}</h5>
+                        <p class="card-text">{{ article.excerpt|truncatewords:15 }}</p>
+                        <a href="{% url 'news:news_detail' article.slug %}" class="btn btn-primary btn-sm">Read More</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        {{ article.published_date|date:"M d, Y" }}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center">No news articles yet. Add some in the admin panel!</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'news:news_list' %}" class="btn btn-primary">View All News</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

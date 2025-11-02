@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }} - ISRO VIMARSH{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                {% if article.category %}
+                <span class="badge bg-primary mb-3">{{ article.category }}</span>
+                {% endif %}
+                
+                <h1 class="mb-3">{{ article.title }}</h1>
+                
+                <div class="text-muted mb-4">
+                    <small>Published on {{ article.published_date|date:"F d, Y" }}</small>
+                    {% if article.source_name %}
+                    <small> | Source: {{ article.source_name }}</small>
+                    {% endif %}
+                </div>
+                
+                {% if article.featured_image %}
+                <img src="{{ article.featured_image.url }}" class="img-fluid rounded mb-4" alt="{{ article.title }}">
+                {% endif %}
+                
+                <div class="article-content">
+                    {{ article.content|linebreaks }}
+                </div>
+                
+                {% if article.source_url %}
+                <div class="mt-4">
+                    <a href="{{ article.source_url }}" target="_blank" class="btn btn-outline-primary">Read Original Article</a>
+                </div>
+                {% endif %}
+                
+                <hr class="my-5">
+                
+                <a href="{% url 'news:news_list' %}" class="btn btn-secondary">Back to News</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
