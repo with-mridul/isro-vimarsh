@@ -1,0 +1,99 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0a0a0a;
+    color: #ffffff;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-size: 1.5rem;
+    color: #ff6b35 !important;
+}
+
+.nav-link {
+    color: #ffffff !important;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #ff6b35 !important;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Cards */
+.card {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+}
+
+.card-title {
+    color: #ff6b35;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #ff6b35;
+    border-color: #ff6b35;
+}
+
+.btn-primary:hover {
+    background-color: #e55a2b;
+    border-color: #e55a2b;
+}
+
+/* Footer */
+footer {
+    background-color: #0a0a0a !important;
+}
+
+footer a {
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #ff6b35 !important;
+}
+
+/* Sections */
+.section-title {
+    color: #ff6b35;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section p {
+        font-size: 1rem;
+    }
+}
