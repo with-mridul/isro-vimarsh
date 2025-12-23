@@ -1,42 +1,313 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ISRO Rockets{% endblock %}
+{% block title %}ISRO Rockets & Launch Vehicles{% endblock %}
+
+{% block extra_css %}
+<style>
+    .rockets-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 80px 0 40px 0;
+        text-align: center;
+    }
+
+    .rockets-hero h1 {
+        font-size: 3rem;
+        color: #ff6b35;
+        margin-bottom: 20px;
+    }
+
+    .rockets-hero p {
+        font-size: 1.2rem;
+        color: #d0d0d0;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Filter Section */
+    .filter-section {
+        background: #0d0d0d;
+        padding: 30px 0;
+        border-bottom: 2px solid #333;
+    }
+
+    .filter-btn {
+        background: #1a1a1a;
+        border: 2px solid #333;
+        color: #d0d0d0;
+        padding: 10px 25px;
+        margin: 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        background: #ff6b35;
+        border-color: #ff6b35;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* Rocket Cards */
+    .rocket-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 1px solid #333;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.4s;
+        height: 100%;
+    }
+
+    .rocket-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
+        border-color: #ff6b35;
+    }
+
+    .rocket-image-container {
+        height: 300px;
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .rocket-image-container img {
+        max-height: 280px;
+        object-fit: contain;
+        transition: transform 0.4s;
+    }
+
+    .rocket-card:hover .rocket-image-container img {
+        transform: scale(1.1);
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+
+    .status-active {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+
+    .status-retired {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    }
+
+    .status-development {
+        background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    }
+
+    .rocket-card-body {
+        padding: 25px;
+    }
+
+    .rocket-name {
+        color: #ff6b35;
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .rocket-full-name {
+        color: #b0b0b0;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .rocket-description {
+        color: #d0d0d0;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    /* Specs Grid */
+    .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .spec-item {
+        background: #0d0d0d;
+        padding: 12px;
+        border-radius: 8px;
+        border-left: 3px solid #ff6b35;
+    }
+
+    .spec-label {
+        font-size: 0.8rem;
+        color: #888;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .spec-value {
+        font-size: 1.1rem;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    /* Success Rate Progress */
+    .success-rate-container {
+        margin-bottom: 20px;
+    }
+
+    .success-rate-bar {
+        background: #0d0d0d;
+        height: 25px;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .success-rate-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+        transition: width 1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .rockets-hero h1 {
+            font-size: 2rem;
+        }
+
+        .specs-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<!-- Hero Section -->
+<section class="rockets-hero">
+    <div class="container">
+        <h1>🚀 ISRO Launch Vehicles</h1>
+        <p>Explore India's fleet of launch vehicles that have propelled satellites and missions into space with remarkable precision and reliability.</p>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="filter-section">
+    <div class="container text-center">
+        <button class="filter-btn active" onclick="filterRockets('all')">All Rockets</button>
+        <button class="filter-btn" onclick="filterRockets('active')">Active</button>
+        <button class="filter-btn" onclick="filterRockets('retired')">Retired</button>
+        <button class="filter-btn" onclick="filterRockets('development')">In Development</button>
+    </div>
+</section>
+
+<!-- Rockets Grid -->
 <section class="py-5">
     <div class="container">
-        <h1 class="section-title">ISRO Rockets</h1>
-        <p class="text-center mb-5">Explore India's launch vehicles and their capabilities</p>
-        
-        <div class="row">
+        <div class="row" id="rocketsContainer">
             {% for rocket in rockets %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100">
-                    {% if rocket.image %}
-                    <img src="{{ rocket.image.url }}" class="card-img-top" alt="{{ rocket.name }}" style="height: 300px; object-fit: cover;">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ rocket.name }}</h5>
-                        <p class="text-muted">{{ rocket.full_name }}</p>
-                        <p class="card-text">{{ rocket.description|truncatewords:20 }}</p>
+            <div class="col-md-6 col-lg-4 mb-4 rocket-item" data-status="{{ rocket.status }}">
+                <div class="rocket-card">
+                    <div class="rocket-image-container">
+                        {% if rocket.image %}
+                        <img src="{{ rocket.image.url }}" alt="{{ rocket.name }}">
+                        {% else %}
+                        <div class="text-center p-4">
+                            <i class="fas fa-rocket" style="font-size: 100px; color: #ff6b35;"></i>
+                        </div>
+                        {% endif %}
+                        <span class="status-badge status-{{ rocket.status }}">
+                            {{ rocket.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="rocket-card-body">
+                        <h3 class="rocket-name">{{ rocket.name }}</h3>
+                        <p class="rocket-full-name">{{ rocket.full_name }}</p>
+                        <p class="rocket-description">{{ rocket.description|truncatewords:20 }}</p>
                         
-                        <ul class="list-unstyled">
-                            <li><strong>Height:</strong> {{ rocket.height }}m</li>
-                            <li><strong>Status:</strong> <span class="badge bg-success">{{ rocket.get_status_display }}</span></li>
-                            <li><strong>Success Rate:</strong> {{ rocket.success_rate }}%</li>
-                        </ul>
+                        <!-- Specs Grid -->
+                        <div class="specs-grid">
+                            <div class="spec-item">
+                                <div class="spec-label">Height</div>
+                                <div class="spec-value">{{ rocket.height }}m</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Stages</div>
+                                <div class="spec-value">{{ rocket.stages }}</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Payload LEO</div>
+                                <div class="spec-value">{{ rocket.payload_capacity_leo }} kg</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Launches</div>
+                                <div class="spec-value">{{ rocket.total_launches }}</div>
+                            </div>
+                        </div>
                         
-                        <a href="{% url 'rockets:rocket_detail' rocket.pk %}" class="btn btn-primary">View Details</a>
+                        <!-- Success Rate -->
+                        <div class="success-rate-container">
+                            <div class="spec-label mb-2">Success Rate</div>
+                            <div class="success-rate-bar">
+                                <div class="success-rate-fill" style="width: {{ rocket.success_rate }}%;">
+                                    {{ rocket.success_rate }}%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="{% url 'rockets:rocket_detail' rocket.pk %}" class="btn btn-primary w-100">
+                            View Full Specifications →
+                        </a>
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="col-12">
-                <p class="text-center">No rockets added yet. Add some in the admin panel!</p>
+                <div class="text-center py-5">
+                    <p class="lead">No rockets added yet. Add some in the admin panel!</p>
+                    <a href="/admin/rockets/rocket/add/" class="btn btn-primary">Add Rocket</a>
+                </div>
             </div>
             {% endfor %}
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Filter functionality
+    function filterRockets(status) {
+        const items = document.querySelectorAll('.rocket-item');
+        const buttons = document.querySelectorAll('.filter-btn');
+        
+        // Update active button
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Filter rockets
+        items.forEach(item => {
+            if (status === 'all' || item.dataset.status === status) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
 {% endblock %}
