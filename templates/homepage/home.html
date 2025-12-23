@@ -3,41 +3,297 @@
 
 {% block title %}ISRO VIMARSH - Home{% endblock %}
 
-{% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <h1>Welcome to ISRO VIMARSH</h1>
-        <p>Exploring India's Journey to Space</p>
-    </div>
-</section>
+{% block extra_css %}
+<style>
+    /* Hero Section Styles */
+    .hero-showcase {
+        position: relative;
+        height: 600px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    }
 
-<!-- Featured Missions -->
-<section class="py-5">
-    <div class="container">
-        <h2 class="section-title">Featured Missions</h2>
-        <div class="row">
-            {% for mission in featured_missions %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    {% if mission.mission_image %}
-                    <img src="{{ mission.mission_image.url }}" class="card-img-top" alt="{{ mission.name }}">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ mission.name }}</h5>
-                        <p class="card-text">{{ mission.description|truncatewords:20 }}</p>
-                        <span class="badge bg-primary">{{ mission.get_status_display }}</span>
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-text h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: #ff6b35;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        margin-bottom: 20px;
+    }
+
+    .hero-text p {
+        font-size: 1.3rem;
+        color: #e0e0e0;
+        margin-bottom: 30px;
+    }
+
+    .hero-image {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-image img {
+        max-height: 500px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.3));
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .mission-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    }
+
+    .stats-container {
+        display: flex;
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ff6b35;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: #b0b0b0;
+        text-transform: uppercase;
+    }
+
+    /* Mission Slideshow */
+    .mission-slideshow {
+        background: #0d0d0d;
+        padding: 60px 0;
+    }
+
+    .slideshow-container {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .mission-slide {
+        display: none;
+        animation: fadeIn 1s;
+    }
+
+    .mission-slide.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .slide-content {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        padding: 40px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .slide-image {
+        flex: 1;
+        text-align: center;
+    }
+
+    .slide-image img {
+        max-width: 100%;
+        max-height: 400px;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(255, 107, 53, 0.3);
+    }
+
+    .slide-text {
+        flex: 1;
+    }
+
+    .slide-text h2 {
+        font-size: 2.5rem;
+        color: #ff6b35;
+        margin-bottom: 15px;
+    }
+
+    .slide-text p {
+        font-size: 1.1rem;
+        color: #d0d0d0;
+        line-height: 1.8;
+    }
+
+    /* Slideshow Navigation */
+    .slideshow-nav {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .nav-dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: #555;
+        border-radius: 50%;
+        margin: 0 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .nav-dot.active {
+        background: #ff6b35;
+        transform: scale(1.3);
+    }
+
+    .nav-dot:hover {
+        background: #ff8555;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-showcase {
+            height: auto;
+            padding: 40px 0;
+        }
+
+        .hero-text h1 {
+            font-size: 2rem;
+        }
+
+        .hero-image img {
+            max-height: 300px;
+        }
+
+        .slide-content {
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .stats-container {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Showcase Section -->
+<section class="hero-showcase">
+    <div class="hero-content">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-text">
+                    {% if featured_missions.0 %}
+                    <span class="mission-badge">🚀 FEATURED MISSION</span>
+                    <h1>{{ featured_missions.0.name }}</h1>
+                    <p>{{ featured_missions.0.description|truncatewords:25 }}</p>
+                    
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ featured_missions.0.launch_date.year|default:"TBD" }}</div>
+                            <div class="stat-label">Launch Year</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ featured_missions.0.get_mission_type_display }}</div>
+                            <div class="stat-label">Mission Type</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ featured_missions.0.get_status_display }}</div>
+                            <div class="stat-label">Status</div>
+                        </div>
                     </div>
+                    {% else %}
+                    <h1>Welcome to ISRO VIMARSH</h1>
+                    <p>Exploring India's Journey to Space</p>
+                    <p class="text-muted">Add featured missions in the admin panel to showcase them here!</p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-6 hero-image">
+                    {% if featured_missions.0.mission_image %}
+                    <img src="{{ featured_missions.0.mission_image.url }}" alt="{{ featured_missions.0.name }}">
+                    {% else %}
+                    <img src="{% static 'images/placeholder-rocket.png' %}" alt="ISRO Mission">
+                    {% endif %}
                 </div>
             </div>
-            {% empty %}
-            <div class="col-12">
-                <p class="text-center">No featured missions yet. Add some in the admin panel!</p>
-            </div>
-            {% endfor %}
         </div>
     </div>
 </section>
+
+<!-- Mission Slideshow -->
+{% if featured_missions %}
+<section class="mission-slideshow">
+    <div class="container">
+        <h2 class="section-title">Mission Highlights</h2>
+        
+        <div class="slideshow-container">
+            {% for mission in featured_missions %}
+            <div class="mission-slide {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter }}">
+                <div class="slide-content">
+                    <div class="slide-image">
+                        {% if mission.mission_image %}
+                        <img src="{{ mission.mission_image.url }}" alt="{{ mission.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="slide-text">
+                        <h2>{{ mission.name }}</h2>
+                        <span class="badge bg-primary mb-3">{{ mission.get_mission_type_display }}</span>
+                        <span class="badge bg-success mb-3">{{ mission.get_status_display }}</span>
+                        <p>{{ mission.description }}</p>
+                        
+                        {% if mission.objectives %}
+                        <h5 class="text-warning mt-4">Key Objectives:</h5>
+                        <p>{{ mission.objectives|truncatewords:30 }}</p>
+                        {% endif %}
+                        
+                        {% if mission.key_achievements %}
+                        <h5 class="text-warning mt-4">Achievements:</h5>
+                        <p>{{ mission.key_achievements|truncatewords:30 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Navigation Dots -->
+            <div class="slideshow-nav">
+                {% for mission in featured_missions %}
+                <span class="nav-dot {% if forloop.first %}active{% endif %}" onclick="showSlide({{ forloop.counter }})"></span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 
 <!-- Latest News -->
 <section class="py-5 bg-dark">
@@ -48,7 +304,7 @@
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     {% if article.featured_image %}
-                    <img src="{{ article.featured_image.url }}" class="card-img-top" alt="{{ article.title }}">
+                    <img src="{{ article.featured_image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;">
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ article.title|truncatewords:10 }}</h5>
@@ -71,4 +327,84 @@
         </div>
     </div>
 </section>
+
+<!-- Quick Stats Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">ISRO at a Glance</h2>
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-warning">{{ total_missions }}</h2>
+                        <p class="text-muted">Total Missions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-warning">{{ total_rockets }}</h2>
+                        <p class="text-muted">Launch Vehicles</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-warning">1969</h2>
+                        <p class="text-muted">Year Founded</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-warning">{{ total_achievements }}</h2>
+                        <p class="text-muted">Major Achievements</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mission Slideshow Auto-rotation
+    let currentSlide = 1;
+    const totalSlides = {{ featured_missions|length }};
+    
+    function showSlide(slideNumber) {
+        // Hide all slides
+        const slides = document.querySelectorAll('.mission-slide');
+        const dots = document.querySelectorAll('.nav-dot');
+        
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // Show selected slide
+        const targetSlide = document.querySelector(`.mission-slide[data-slide="${slideNumber}"]`);
+        if (targetSlide) {
+            targetSlide.classList.add('active');
+            dots[slideNumber - 1].classList.add('active');
+            currentSlide = slideNumber;
+        }
+    }
+    
+    // Auto-advance slides every 5 seconds
+    function autoAdvance() {
+        currentSlide++;
+        if (currentSlide > totalSlides) {
+            currentSlide = 1;
+        }
+        showSlide(currentSlide);
+    }
+    
+    // Start auto-advance if there are multiple slides
+    if (totalSlides > 1) {
+        setInterval(autoAdvance, 5000);
+    }
+</script>
 {% endblock %}
