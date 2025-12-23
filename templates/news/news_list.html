@@ -1,39 +1,393 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ISRO News{% endblock %}
+{% block title %}ISRO News & Updates{% endblock %}
+
+{% block extra_css %}
+<style>
+    .news-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 80px 0 40px 0;
+        text-align: center;
+    }
+
+    .news-hero h1 {
+        font-size: 3rem;
+        color: #ff6b35;
+        margin-bottom: 20px;
+    }
+
+    .news-hero p {
+        font-size: 1.2rem;
+        color: #d0d0d0;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Category Filter */
+    .category-filter {
+        background: #0d0d0d;
+        padding: 30px 0;
+        border-bottom: 2px solid #333;
+    }
+
+    .category-btn {
+        background: #1a1a1a;
+        border: 2px solid #333;
+        color: #d0d0d0;
+        padding: 10px 25px;
+        margin: 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    .category-btn:hover, .category-btn.active {
+        background: #ff6b35;
+        border-color: #ff6b35;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* Featured Article */
+    .featured-article {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 40px;
+        border: 2px solid #ff6b35;
+    }
+
+    .featured-article .row {
+        align-items: center;
+    }
+
+    .featured-image {
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .featured-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .featured-content {
+        padding: 40px;
+    }
+
+    .featured-badge {
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        color: #fff;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+
+    .featured-title {
+        font-size: 2.5rem;
+        color: #ff6b35;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .featured-excerpt {
+        font-size: 1.2rem;
+        color: #d0d0d0;
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+
+    .featured-meta {
+        color: #b0b0b0;
+        margin-bottom: 20px;
+    }
+
+    /* News Cards */
+    .news-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 1px solid #333;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.4s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .news-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(255, 107, 53, 0.3);
+        border-color: #ff6b35;
+    }
+
+    .news-card-image {
+        height: 220px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .news-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+    }
+
+    .news-card:hover .news-card-image img {
+        transform: scale(1.1);
+    }
+
+    .news-card-body {
+        padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .news-category-badge {
+        background: #ff6b35;
+        color: #fff;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+
+    .news-title {
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+
+    .news-excerpt {
+        color: #d0d0d0;
+        margin-bottom: 20px;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+
+    .news-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #333;
+        margin-top: auto;
+    }
+
+    .news-date {
+        color: #b0b0b0;
+        font-size: 0.9rem;
+    }
+
+    .read-more-btn {
+        color: #ff6b35;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .read-more-btn:hover {
+        color: #fff;
+    }
+
+    /* Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 10px;
+    }
+
+    .page-link {
+        background: #1a1a1a;
+        border: 2px solid #333;
+        color: #d0d0d0;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .page-link:hover, .page-link.active {
+        background: #ff6b35;
+        border-color: #ff6b35;
+        color: #fff;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    .empty-state i {
+        font-size: 100px;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    .empty-state h3 {
+        color: #d0d0d0;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .news-hero h1 {
+            font-size: 2rem;
+        }
+
+        .featured-title {
+            font-size: 1.8rem;
+        }
+
+        .featured-content {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<!-- Hero Section -->
+<section class="news-hero">
+    <div class="container">
+        <h1>📰 ISRO News & Updates</h1>
+        <p>Stay informed about the latest developments, missions, and achievements of India's space program.</p>
+    </div>
+</section>
+
+<!-- Category Filter -->
+<section class="category-filter">
+    <div class="container text-center">
+        <a href="{% url 'news:news_list' %}" class="category-btn {% if not selected_category %}active{% endif %}">All News</a>
+        {% for category in categories %}
+        <a href="?category={{ category.slug }}" class="category-btn {% if selected_category == category.slug %}active{% endif %}">
+            {{ category.name }}
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- News Content -->
 <section class="py-5">
     <div class="container">
-        <h1 class="section-title">Latest ISRO News</h1>
-        
-        <div class="row">
-            {% for article in news_articles %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100">
-                    {% if article.featured_image %}
-                    <img src="{{ article.featured_image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;">
-                    {% endif %}
-                    <div class="card-body">
-                        {% if article.category %}
-                        <span class="badge bg-primary mb-2">{{ article.category }}</span>
-                        {% endif %}
-                        <h5 class="card-title">{{ article.title }}</h5>
-                        <p class="card-text">{{ article.excerpt|truncatewords:20 }}</p>
-                        <a href="{% url 'news:news_detail' article.slug %}" class="btn btn-primary btn-sm">Read Full Article</a>
+        {% if news_articles %}
+            <!-- Featured Article (First article if featured exists) -->
+            {% if featured_article %}
+            <div class="featured-article">
+                <div class="row g-0">
+                    <div class="col-lg-6">
+                        <div class="featured-image">
+                            {% if featured_article.featured_image %}
+                            <img src="{{ featured_article.featured_image.url }}" alt="{{ featured_article.title }}">
+                            {% else %}
+                            <div class="bg-dark d-flex align-items-center justify-content-center h-100">
+                                <i class="fas fa-newspaper" style="font-size: 100px; color: #333;"></i>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="card-footer text-muted">
-                        <small>{{ article.published_date|date:"F d, Y" }}</small>
+                    <div class="col-lg-6">
+                        <div class="featured-content">
+                            <span class="featured-badge">⭐ FEATURED</span>
+                            {% if featured_article.category %}
+                            <span class="news-category-badge">{{ featured_article.category }}</span>
+                            {% endif %}
+                            <h2 class="featured-title">{{ featured_article.title }}</h2>
+                            <p class="featured-excerpt">{{ featured_article.excerpt|truncatewords:30 }}</p>
+                            <div class="featured-meta">
+                                <i class="far fa-calendar"></i> {{ featured_article.published_date|date:"F d, Y" }}
+                                {% if featured_article.source_name %}
+                                | <i class="fas fa-link"></i> {{ featured_article.source_name }}
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'news:news_detail' featured_article.slug %}" class="btn btn-primary btn-lg">
+                                Read Full Article →
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            {% empty %}
-            <div class="col-12">
-                <p class="text-center">No news articles yet. Add some in the admin panel!</p>
+            {% endif %}
+
+            <!-- Regular News Grid -->
+            <div class="row">
+                {% for article in news_articles %}
+                    {% if not article.is_featured or not featured_article %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="news-card">
+                            <div class="news-card-image">
+                                {% if article.featured_image %}
+                                <img src="{{ article.featured_image.url }}" alt="{{ article.title }}">
+                                {% else %}
+                                <div class="bg-dark d-flex align-items-center justify-content-center h-100">
+                                    <i class="fas fa-newspaper" style="font-size: 60px; color: #333;"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="news-card-body">
+                                {% if article.category %}
+                                <span class="news-category-badge">{{ article.category }}</span>
+                                {% endif %}
+                                <h3 class="news-title">{{ article.title|truncatewords:12 }}</h3>
+                                <p class="news-excerpt">{{ article.excerpt|truncatewords:20 }}</p>
+                                <div class="news-meta">
+                                    <span class="news-date">
+                                        <i class="far fa-calendar"></i> {{ article.published_date|date:"M d, Y" }}
+                                    </span>
+                                    <a href="{% url 'news:news_detail' article.slug %}" class="read-more-btn">
+                                        Read More →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <div class="pagination-container">
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}" class="page-link">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="page-link">Previous</a>
+                    {% endif %}
+
+                    <span class="page-link active">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="page-link">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="page-link">Last</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <i class="far fa-newspaper"></i>
+                <h3>No news articles found</h3>
+                <p class="text-muted mb-4">Add some news articles through the admin panel to see them here.</p>
+                <a href="/admin/news/newsarticle/add/" class="btn btn-primary">Add News Article</a>
+            </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

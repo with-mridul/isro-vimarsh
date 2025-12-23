@@ -1,41 +1,460 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ISRO History{% endblock %}
+{% block title %}ISRO History & Timeline{% endblock %}
+
+{% block extra_css %}
+<style>
+    .history-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 80px 0 40px 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .history-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ff6b35" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+        background-size: cover;
+    }
+
+    .history-hero h1 {
+        font-size: 3rem;
+        color: #ff6b35;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .history-hero p {
+        font-size: 1.2rem;
+        color: #d0d0d0;
+        max-width: 700px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Decade Filter */
+    .decade-filter {
+        background: #0d0d0d;
+        padding: 30px 0;
+        border-bottom: 2px solid #333;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .decade-btn {
+        background: #1a1a1a;
+        border: 2px solid #333;
+        color: #d0d0d0;
+        padding: 10px 25px;
+        margin: 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+
+    .decade-btn:hover, .decade-btn.active {
+        background: #ff6b35;
+        border-color: #ff6b35;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* Timeline Container */
+    .timeline-container {
+        position: relative;
+        padding: 60px 0;
+    }
+
+    /* Timeline Line */
+    .timeline-line {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #ff6b35 0%, #333 50%, #ff6b35 100%);
+    }
+
+    /* Timeline Item */
+    .timeline-item {
+        position: relative;
+        margin-bottom: 80px;
+        opacity: 0;
+        animation: fadeInUp 0.6s forwards;
+    }
+
+    .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+    .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+    .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+    .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+    .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Left Side Items */
+    .timeline-item.left .timeline-content {
+        margin-right: 55%;
+        text-align: right;
+    }
+
+    /* Right Side Items */
+    .timeline-item.right .timeline-content {
+        margin-left: 55%;
+        text-align: left;
+    }
+
+    /* Timeline Dot */
+    .timeline-dot {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        border: 5px solid #0a0a0a;
+        border-radius: 50%;
+        z-index: 10;
+        box-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+    }
+
+    .timeline-dot::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: #ff6b35;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.5);
+            opacity: 0;
+        }
+    }
+
+    /* Timeline Content Card */
+    .timeline-content {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 2px solid #333;
+        border-radius: 15px;
+        padding: 30px;
+        transition: all 0.4s;
+    }
+
+    .timeline-content:hover {
+        border-color: #ff6b35;
+        transform: scale(1.02);
+        box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+    }
+
+    /* Year Badge */
+    .year-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        color: #fff;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    }
+
+    /* Category Badge */
+    .category-badge {
+        display: inline-block;
+        background: #0d0d0d;
+        color: #ff6b35;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        border: 1px solid #333;
+    }
+
+    /* Achievement Title */
+    .achievement-title {
+        font-size: 1.8rem;
+        color: #fff;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    /* Achievement Description */
+    .achievement-description {
+        color: #d0d0d0;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    /* Achievement Image */
+    .achievement-image {
+        margin-top: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .achievement-image img {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        transition: transform 0.4s;
+    }
+
+    .timeline-content:hover .achievement-image img {
+        transform: scale(1.05);
+    }
+
+    /* Stats Section */
+    .stats-section {
+        background: #0d0d0d;
+        padding: 60px 0;
+        margin-top: 60px;
+        border-top: 2px solid #333;
+    }
+
+    .stat-box {
+        text-align: center;
+        padding: 30px;
+        background: #1a1a1a;
+        border-radius: 15px;
+        border: 2px solid #333;
+        transition: all 0.3s;
+    }
+
+    .stat-box:hover {
+        border-color: #ff6b35;
+        transform: translateY(-5px);
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        color: #ff6b35;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        color: #b0b0b0;
+        text-transform: uppercase;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 100px 20px;
+    }
+
+    .empty-state i {
+        font-size: 100px;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .timeline-line {
+            left: 30px;
+        }
+
+        .timeline-dot {
+            left: 30px;
+        }
+
+        .timeline-item.left .timeline-content,
+        .timeline-item.right .timeline-content {
+            margin-left: 80px;
+            margin-right: 0;
+            text-align: left;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .history-hero h1 {
+            font-size: 2rem;
+        }
+
+        .achievement-title {
+            font-size: 1.4rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="py-5">
+<!-- Hero Section -->
+<section class="history-hero">
     <div class="container">
-        <h1 class="section-title">ISRO's Journey Through Time</h1>
-        <p class="text-center mb-5">Milestones and achievements of Indian Space Research Organisation</p>
-        
-        <div class="timeline">
+        <h1>🚀 ISRO's Journey Through Time</h1>
+        <p>From humble beginnings in 1969 to becoming a global space power - explore the milestones that shaped India's space program.</p>
+    </div>
+</section>
+
+<!-- Decade Filter -->
+<section class="decade-filter">
+    <div class="container text-center">
+        <button class="decade-btn active" onclick="filterDecade('all')">All Years</button>
+        <button class="decade-btn" onclick="filterDecade('1960')">1960s</button>
+        <button class="decade-btn" onclick="filterDecade('1970')">1970s</button>
+        <button class="decade-btn" onclick="filterDecade('1980')">1980s</button>
+        <button class="decade-btn" onclick="filterDecade('1990')">1990s</button>
+        <button class="decade-btn" onclick="filterDecade('2000')">2000s</button>
+        <button class="decade-btn" onclick="filterDecade('2010')">2010s</button>
+        <button class="decade-btn" onclick="filterDecade('2020')">2020s</button>
+    </div>
+</section>
+
+<!-- Timeline Section -->
+<section class="timeline-container">
+    <div class="container">
+        {% if achievements %}
+            <div class="timeline-line"></div>
+            
             {% for achievement in achievements %}
-            <div class="row mb-5">
-                <div class="col-md-2 text-center">
-                    <h3 class="text-warning">{{ achievement.year }}</h3>
-                </div>
-                <div class="col-md-10">
-                    <div class="card">
-                        <div class="card-body">
-                            {% if achievement.image %}
-                            <img src="{{ achievement.image.url }}" class="float-end ms-3 mb-3" style="max-width: 200px;" alt="{{ achievement.title }}">
-                            {% endif %}
-                            <h4 class="card-title">{{ achievement.title }}</h4>
-                            {% if achievement.category %}
-                            <span class="badge bg-primary mb-2">{{ achievement.category }}</span>
-                            {% endif %}
-                            <p class="card-text">{{ achievement.description }}</p>
-                        </div>
+            <div class="timeline-item {% cycle 'left' 'right' %}" data-year="{{ achievement.year }}">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="year-badge">{{ achievement.year }}</span>
+                    {% if achievement.category %}
+                    <span class="category-badge">{{ achievement.category }}</span>
+                    {% endif %}
+                    
+                    <h3 class="achievement-title">{{ achievement.title }}</h3>
+                    <p class="achievement-description">{{ achievement.description }}</p>
+                    
+                    {% if achievement.image %}
+                    <div class="achievement-image">
+                        <img src="{{ achievement.image.url }}" alt="{{ achievement.title }}">
                     </div>
+                    {% endif %}
                 </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-                <p class="text-center">No achievements added yet. Add some in the admin panel!</p>
             </div>
             {% endfor %}
+            
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <i class="fas fa-history"></i>
+                <h3>No achievements added yet</h3>
+                <p class="text-muted mb-4">Add ISRO's historical milestones through the admin panel.</p>
+                <a href="/admin/homepage/isroachievement/add/" class="btn btn-primary">Add Achievement</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Statistics Section -->
+{% if achievements %}
+<section class="stats-section">
+    <div class="container">
+        <h2 class="section-title mb-5">ISRO by the Numbers</h2>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="stat-box">
+                    <div class="stat-number">{{ achievements.count }}</div>
+                    <div class="stat-label">Major Milestones</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-box">
+                    <div class="stat-number">55+</div>
+                    <div class="stat-label">Years of Excellence</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-box">
+                    <div class="stat-number">129</div>
+                    <div class="stat-label">Satellite Launches</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-box">
+                    <div class="stat-number">430+</div>
+                    <div class="stat-label">Foreign Satellites</div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Decade filtering
+    function filterDecade(decade) {
+        const items = document.querySelectorAll('.timeline-item');
+        const buttons = document.querySelectorAll('.decade-btn');
+        
+        // Update active button
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Filter timeline items
+        items.forEach(item => {
+            const year = parseInt(item.dataset.year);
+            
+            if (decade === 'all') {
+                item.style.display = 'block';
+            } else {
+                const decadeStart = parseInt(decade);
+                const decadeEnd = decadeStart + 9;
+                
+                if (year >= decadeStart && year <= decadeEnd) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // Smooth scroll to timeline
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth reveal animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+    });
+</script>
 {% endblock %}
