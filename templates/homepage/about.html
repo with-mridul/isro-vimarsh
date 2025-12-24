@@ -3,38 +3,408 @@
 
 {% block title %}About ISRO VIMARSH{% endblock %}
 
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 80px 0 40px 0;
+        text-align: center;
+    }
+
+    .about-hero h1 {
+        font-size: 3rem;
+        color: #ff6b35;
+        margin-bottom: 20px;
+    }
+
+    .about-hero p {
+        font-size: 1.2rem;
+        color: #d0d0d0;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Content Sections */
+    .about-section {
+        padding: 60px 0;
+    }
+
+    .about-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 2px solid #333;
+        border-radius: 15px;
+        padding: 40px;
+        margin-bottom: 30px;
+        transition: all 0.3s;
+    }
+
+    .about-card:hover {
+        border-color: #ff6b35;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+    }
+
+    .about-card h2 {
+        color: #ff6b35;
+        font-size: 2rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .about-card h2 i {
+        font-size: 2.5rem;
+    }
+
+    .about-card h3 {
+        color: #fff;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+
+    .about-card p, .about-card li {
+        color: #d0d0d0;
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    .about-card ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .about-card ul li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+        position: relative;
+    }
+
+    .about-card ul li::before {
+        content: '🚀';
+        position: absolute;
+        left: 0;
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .feature-item {
+        background: #0d0d0d;
+        padding: 25px;
+        border-radius: 10px;
+        border-left: 4px solid #ff6b35;
+        transition: all 0.3s;
+    }
+
+    .feature-item:hover {
+        transform: translateX(5px);
+        background: #1a1a1a;
+    }
+
+    .feature-item h4 {
+        color: #ff6b35;
+        margin-bottom: 10px;
+    }
+
+    .feature-item p {
+        color: #b0b0b0;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    /* Tech Stack */
+    .tech-stack {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .tech-badge {
+        background: #0d0d0d;
+        border: 2px solid #ff6b35;
+        color: #ff6b35;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .tech-badge:hover {
+        background: #ff6b35;
+        color: #fff;
+        transform: scale(1.05);
+    }
+
+    /* Links Section */
+    .links-section {
+        background: #0d0d0d;
+        padding: 60px 0;
+    }
+
+    .link-card {
+        background: #1a1a1a;
+        border: 2px solid #333;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s;
+        height: 100%;
+    }
+
+    .link-card:hover {
+        border-color: #ff6b35;
+        transform: translateY(-5px);
+    }
+
+    .link-card i {
+        font-size: 4rem;
+        color: #ff6b35;
+        margin-bottom: 20px;
+    }
+
+    .link-card h3 {
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .link-card p {
+        color: #b0b0b0;
+        margin-bottom: 20px;
+    }
+
+    .link-card a {
+        color: #ff6b35;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .link-card a:hover {
+        color: #fff;
+    }
+
+    /* Disclaimer Box */
+    .disclaimer-box {
+        background: linear-gradient(135deg, #2d1810 0%, #1a1a1a 100%);
+        border: 2px solid #ff6b35;
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 30px;
+    }
+
+    .disclaimer-box h3 {
+        color: #ff6b35;
+        margin-bottom: 15px;
+    }
+
+    .disclaimer-box p {
+        color: #d0d0d0;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .about-hero h1 {
+            font-size: 2rem;
+        }
+
+        .about-card {
+            padding: 25px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="py-5">
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <h1>About ISRO VIMARSH</h1>
+        <p>A passion project dedicated to celebrating India's remarkable journey in space exploration</p>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="about-section">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <h1 class="section-title">About ISRO VIMARSH</h1>
+            <div class="col-lg-10 mx-auto">
                 
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="text-warning">What is ISRO VIMARSH?</h3>
-                        <p>ISRO VIMARSH is a fan-made website dedicated to showcasing the incredible achievements and missions of the Indian Space Research Organisation (ISRO).</p>
-                        
-                        <h3 class="text-warning mt-4">Our Mission</h3>
-                        <p>To create an enthusiastic and modern platform where space enthusiasts around the world can learn about ISRO's rockets, missions, and contributions to space exploration.</p>
-                        
-                        <h3 class="text-warning mt-4">Features</h3>
-                        <ul>
-                            <li>Comprehensive rocket database with specifications</li>
-                            <li>Latest news about ISRO missions and achievements</li>
-                            <li>Historical timeline of ISRO's journey</li>
-                            <li>Mission details and highlights</li>
-                        </ul>
-                        
-                        <h3 class="text-warning mt-4">Disclaimer</h3>
-                        <p class="text-muted">This is an unofficial fan website and is not affiliated with or endorsed by ISRO. All information is collected from public sources and presented for educational purposes.</p>
-                        
-                        <h3 class="text-warning mt-4">Links</h3>
-                        <ul class="list-unstyled">
-                            <li><a href="https://www.isro.gov.in" target="_blank" class="text-white">Official ISRO Website</a></li>
-                            <li><a href="#" class="text-white">GitHub Repository</a></li>
-                        </ul>
+                <!-- What is ISRO VIMARSH -->
+                <div class="about-card">
+                    <h2><i class="fas fa-rocket"></i> What is ISRO VIMARSH?</h2>
+                    <p>
+                        ISRO VIMARSH is a fan-made website created to showcase the incredible achievements and ongoing missions of the Indian Space Research Organisation (ISRO). Built with enthusiasm and admiration for India's space program, this platform aims to present ISRO's journey in a modern, engaging, and accessible way.
+                    </p>
+                    <p>
+                        The name "VIMARSH" (विमर्श) means "discussion" or "contemplation" in Sanskrit, reflecting our goal to spark conversations and inspire curiosity about space exploration among audiences worldwide.
+                    </p>
+                </div>
+
+                <!-- Our Mission -->
+                <div class="about-card">
+                    <h2><i class="fas fa-bullseye"></i> Our Mission</h2>
+                    <p>
+                        To create an enthusiastic and modern platform where space enthusiasts, students, and the general public can:
+                    </p>
+                    <ul>
+                        <li>Learn about ISRO's rockets and their technical capabilities</li>
+                        <li>Stay updated with the latest news and mission developments</li>
+                        <li>Explore the rich history of India's space program</li>
+                        <li>Understand the significance of ISRO's contributions to global space exploration</li>
+                        <li>Inspire the next generation to pursue careers in space science and technology</li>
+                    </ul>
+                </div>
+
+                <!-- Features -->
+                <div class="about-card">
+                    <h2><i class="fas fa-star"></i> Key Features</h2>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <h4>🚀 Rocket Database</h4>
+                            <p>Comprehensive information about ISRO's launch vehicles including PSLV, GSLV, and LVM3 with detailed specifications.</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>📰 Latest News</h4>
+                            <p>Curated news articles about ISRO's missions, launches, and achievements from reliable sources.</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>📜 Historical Timeline</h4>
+                            <p>Interactive timeline showcasing ISRO's journey from 1969 to present day with major milestones.</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>🎯 Mission Highlights</h4>
+                            <p>Featured sections on landmark missions like Chandrayaan-3, Aditya L1, and Gaganyaan.</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>📱 Responsive Design</h4>
+                            <p>Beautiful, mobile-friendly interface that works seamlessly across all devices.</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>🎨 Modern UI/UX</h4>
+                            <p>Contemporary design with smooth animations and engaging visual elements.</p>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Tech Stack -->
+                <div class="about-card">
+                    <h2><i class="fas fa-code"></i> Built With</h2>
+                    <p>
+                        This website is built using modern web technologies as a learning project:
+                    </p>
+                    
+                    <div class="tech-stack">
+                        <span class="tech-badge">Python</span>
+                        <span class="tech-badge">Django</span>
+                        <span class="tech-badge">HTML5</span>
+                        <span class="tech-badge">CSS3</span>
+                        <span class="tech-badge">JavaScript</span>
+                        <span class="tech-badge">Bootstrap 5</span>
+                        <span class="tech-badge">SQLite</span>
+                    </div>
+                    
+                    <p class="mt-4">
+                        Developed as a portfolio project to demonstrate full-stack web development skills while celebrating India's achievements in space exploration.
+                    </p>
+                </div>
+
+                <!-- Why ISRO -->
+                <div class="about-card">
+                    <h2><i class="fas fa-heart"></i> Why ISRO?</h2>
+                    <p>
+                        ISRO represents the perfect blend of ambition, innovation, and frugal engineering. Despite working with limited budgets compared to other space agencies, ISRO has achieved remarkable milestones:
+                    </p>
+                    <ul>
+                        <li>Successfully reached Mars orbit on the first attempt (Mangalyaan)</li>
+                        <li>First country to land near the Moon's south pole (Chandrayaan-3)</li>
+                        <li>Launched 104 satellites in a single mission (world record)</li>
+                        <li>Developed cost-effective launch vehicles with high success rates</li>
+                        <li>Contributed to global satellite launches for numerous countries</li>
+                    </ul>
+                    <p>
+                        ISRO's story is one of perseverance, innovation, and making the impossible possible with limited resources—an inspiration for aspiring engineers and scientists worldwide.
+                    </p>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="disclaimer-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Important Disclaimer</h3>
+                    <p>
+                        <strong>This is an unofficial fan website and is not affiliated with, endorsed by, or connected to ISRO or the Government of India in any way.</strong> All information is collected from publicly available sources and presented for educational and informational purposes only. For official information, please visit the <a href="https://www.isro.gov.in" target="_blank" style="color: #ff6b35;">official ISRO website</a>.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Links Section -->
+<section class="links-section">
+    <div class="container">
+        <h2 class="section-title mb-5">Connect & Explore</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="link-card">
+                    <i class="fas fa-globe"></i>
+                    <h3>Official ISRO</h3>
+                    <p>Visit the official website for authentic information and updates</p>
+                    <a href="https://www.isro.gov.in" target="_blank" rel="noopener">
+                        Visit Website →
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="link-card">
+                    <i class="fab fa-github"></i>
+                    <h3>GitHub</h3>
+                    <p>View the source code and contribute to this project</p>
+                    <a href="#" target="_blank" rel="noopener">
+                        View on GitHub →
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="link-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Feedback</h3>
+                    <p>Have suggestions or found an issue? Let us know!</p>
+                    <a href="#" onclick="alert('Contact form coming soon!')">
+                        Send Feedback →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Credits Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="about-card">
+                    <h2><i class="fas fa-users"></i> Credits & Acknowledgments</h2>
+                    <p>
+                        This website was created as a portfolio and learning project. Special thanks to:
+                    </p>
+                    <ul style="text-align: left; max-width: 600px; margin: 20px auto;">
+                        <li>ISRO for inspiring millions with their achievements</li>
+                        <li>All the scientists and engineers who make space exploration possible</li>
+                        <li>Open-source community for the tools and frameworks used</li>
+                        <li>Space enthusiasts who keep the passion alive</li>
+                    </ul>
+                    <p class="mt-4">
+                        <strong>Developed with ❤️ by 'Mridul' a space enthusiast and aspiring developer</strong>
+                    </p>
                 </div>
             </div>
         </div>
