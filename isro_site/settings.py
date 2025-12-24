@@ -23,8 +23,9 @@ from decouple import config, Csv
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-temporary-key-change-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv)
-
+# Simple string split instead of Csv
+allowed_hosts_str = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_str.split(',')]
 
 # Application definition
 
