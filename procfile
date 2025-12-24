@@ -1,0 +1,1 @@
+web: gunicorn isro_site.wsgi --log-file -

@@ -7,11 +7,15 @@ __pycache__/
 # Django
 *.log
 db.sqlite3
+db.sqlite3-journal
 media/
 
 # Virtual Environment
 venv/
 env/
+ENV/
+*.swp
+*.swo
 
 # IDE
 .vscode/
@@ -19,3 +23,7 @@ env/
 
 # Environment variables
 .env
+.env.production
+
+# Static files (will be collected for production)
+staticfiles/
