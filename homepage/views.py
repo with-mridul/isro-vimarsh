@@ -5,7 +5,7 @@ from rockets.models import Rocket
 from .models import IsroAchievement
 
 def home(request):
-    featured_missions = Mission.objects.filter(featured_on_homepage=True).order_by('homepage_order')[:3]
+    featured_missions = Mission.objects.filter(featured_on_homepage=True).order_by('homepage_order')[:6]
     latest_news = NewsArticle.objects.filter(is_published=True)[:3]
     
     # Stats for quick glance section

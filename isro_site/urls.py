@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('homepage.urls')),
     path('rockets/', include('rockets.urls')),
     path('news/', include('news.urls')),
+    path('missions/', include('missions.urls')),
 ]
 
 # Serve media files in development

@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ mission.name }} - ISRO Mission{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mission-detail-hero {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        padding: 60px 0;
+    }
+
+    .mission-image-showcase {
+        text-align: center;
+        padding: 40px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 15px;
+    }
+
+    .mission-image-showcase img {
+        max-width: 100%;
+        max-height: 500px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.5));
+        background: #0d0d0d;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .mission-title {
+        color: #ff6b35;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .mission-subtitle {
+        color: #b0b0b0;
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+    }
+
+    .info-section {
+        background: #0d0d0d;
+        padding: 60px 0;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 1px solid #333;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        border-left: 4px solid #ff6b35;
+    }
+
+    .info-card h3 {
+        color: #ff6b35;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+    .info-table {
+        width: 100%;
+    }
+
+    .info-table td {
+        padding: 15px 10px;
+        color: #d0d0d0;
+        border-bottom: 1px solid #333;
+    }
+
+    .info-table td:first-child {
+        color: #ff6b35;
+        font-weight: bold;
+        width: 40%;
+    }
+
+    .badge-large {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 25px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+        .mission-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="mission-detail-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="mission-image-showcase">
+                    {% if mission.mission_image %}
+                    <img src="{{ mission.mission_image.url }}" alt="{{ mission.name }}">
+                    {% else %}
+                    <i class="fas fa-satellite" style="font-size: 200px; color: #ff6b35;"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h1 class="mission-title">{{ mission.name }}</h1>
+                {% if mission.full_name %}
+                <h2 class="mission-subtitle">{{ mission.full_name }}</h2>
+                {% endif %}
+                <p class="lead" style="color: #d0d0d0;">{{ mission.description }}</p>
+                
+                <div class="mt-4">
+                    <span class="badge-large bg-primary">{{ mission.get_mission_type_display }}</span>
+                    <span class="badge-large bg-success">{{ mission.get_status_display }}</span>
+                    {% if mission.featured_on_homepage %}
+                    <span class="badge-large" style="background: #ff6b35;">⭐ Featured</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Detailed Information -->
+<section class="info-section">
+    <div class="container">
+        <div class="row">
+            <!-- Mission Details -->
+            <div class="col-lg-6 mb-4">
+                <div class="info-card">
+                    <h3>Mission Details</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td>Mission Type</td>
+                            <td>{{ mission.get_mission_type_display }}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td><span class="badge bg-success">{{ mission.get_status_display }}</span></td>
+                        </tr>
+                        {% if mission.launch_date %}
+                        <tr>
+                            <td>Launch Date</td>
+                            <td>{{ mission.launch_date|date:"F d, Y" }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if mission.end_date %}
+                        <tr>
+                            <td>Mission End</td>
+                            <td>{{ mission.end_date|date:"F d, Y" }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if mission.rocket_used %}
+                        <tr>
+                            <td>Launch Vehicle</td>
+                            <td>{{ mission.rocket_used }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Objectives & Achievements -->
+            <div class="col-lg-6 mb-4">
+                {% if mission.objectives %}
+                <div class="info-card">
+                    <h3>Mission Objectives</h3>
+                    <p style="color: #d0d0d0; line-height: 1.8;">{{ mission.objectives }}</p>
+                </div>
+                {% endif %}
+                
+                {% if mission.key_achievements %}
+                <div class="info-card">
+                    <h3>Key Achievements</h3>
+                    <p style="color: #d0d0d0; line-height: 1.8;">{{ mission.key_achievements }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Related Missions -->
+        {% if related_missions %}
+        <div class="mt-5">
+            <h2 class="section-title">Related Missions</h2>
+            <div class="row">
+                {% for related in related_missions %}
+                <div class="col-md-4 mb-4">
+                    <div class="info-card" style="height: 100%;">
+                        <h4 style="color: #fff;">{{ related.name }}</h4>
+                        <p style="color: #b0b0b0;">{{ related.description|truncatewords:20 }}</p>
+                        <a href="{% url 'missions:mission_detail' related.pk %}" class="btn btn-sm btn-primary">View Mission</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Back Button -->
+        <div class="text-center mt-4">
+            <a href="{% url 'missions:mission_list' %}" class="btn btn-outline-light btn-lg">
+                ← Back to All Missions
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

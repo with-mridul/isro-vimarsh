@@ -32,8 +32,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                    {% comment %} <li class="nav-item">
                         <a class="nav-link" href="{% url 'homepage:home' %}">Home</a>
+                    </li> {% endcomment %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'missions:mission_list' %}">Missions</a>  <!-- Add this -->
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'rockets:rocket_list' %}">Rockets</a>
@@ -82,6 +85,11 @@
                     <li class="mb-2">
                         <a href="{% url 'homepage:home' %}" class="text-white" style="text-decoration: none;">
                             <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'missions:mission_list' %}" class="text-white" style="text-decoration: none;">
+                            <i class="fas fa-satellite"></i> Missions
                         </a>
                     </li>
                     <li class="mb-2">

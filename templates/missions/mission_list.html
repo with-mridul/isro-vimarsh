@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ISRO Missions{% endblock %}
+
+{% block extra_css %}
+<style>
+    .missions-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 80px 0 40px 0;
+        text-align: center;
+    }
+
+    .missions-hero h1 {
+        font-size: 3rem;
+        color: #ff6b35;
+        margin-bottom: 20px;
+    }
+
+    .missions-hero p {
+        font-size: 1.2rem;
+        color: #d0d0d0;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Filter Section */
+    .filter-section {
+        background: #0d0d0d;
+        padding: 30px 0;
+        border-bottom: 2px solid #333;
+    }
+
+    .filter-btn {
+        background: #1a1a1a;
+        border: 2px solid #333;
+        color: #d0d0d0;
+        padding: 10px 25px;
+        margin: 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        background: #ff6b35;
+        border-color: #ff6b35;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* Mission Cards */
+    .mission-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 2px solid #333;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.4s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mission-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
+        border-color: #ff6b35;
+    }
+
+    .mission-image-container {
+        height: 250px;
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .mission-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+    }
+
+    .mission-card:hover .mission-image-container img {
+        transform: scale(1.1);
+    }
+
+    .mission-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.85rem;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        color: #fff;
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+
+    .status-planned { background: linear-gradient(135deg, #6c757d 0%, #495057 100%); }
+    .status-development { background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); }
+    .status-active { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+    .status-completed { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
+    .status-failed { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); }
+
+    .mission-card-body {
+        padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mission-name {
+        color: #ff6b35;
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .mission-full-name {
+        color: #b0b0b0;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .mission-description {
+        color: #d0d0d0;
+        margin-bottom: 20px;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+
+    .mission-meta {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        background: #0d0d0d;
+        padding: 8px 15px;
+        border-radius: 8px;
+        border-left: 3px solid #ff6b35;
+        font-size: 0.9rem;
+    }
+
+    .meta-label {
+        color: #888;
+        margin-right: 5px;
+    }
+
+    .meta-value {
+        color: #fff;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .missions-hero h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="missions-hero">
+    <div class="container">
+        <h1>🛰️ ISRO Missions</h1>
+        <p>Explore India's space missions from lunar exploration to interplanetary journeys and Earth observation satellites.</p>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="filter-section">
+    <div class="container text-center">
+        <div class="mb-3">
+            <strong style="color: #ff6b35;">Mission Type:</strong>
+            <a href="{% url 'missions:mission_list' %}" class="filter-btn {% if not selected_type %}active{% endif %}">All Types</a>
+            {% for type_dict in mission_types %}
+            <a href="?type={{ type_dict.value }}{% if selected_status %}&status={{ selected_status }}{% endif %}" 
+               class="filter-btn {% if selected_type == type_dict.value %}active{% endif %}">
+                {{ type_dict.label }}
+            </a>
+            {% endfor %}
+        </div>
+        <div>
+            <strong style="color: #ff6b35;">Status:</strong>
+            <a href="{% url 'missions:mission_list' %}" class="filter-btn {% if not selected_status %}active{% endif %}">All Status</a>
+            {% for status_dict in statuses %}
+            <a href="?status={{ status_dict.value }}{% if selected_type %}&type={{ selected_type }}{% endif %}" 
+               class="filter-btn {% if selected_status == status_dict.value %}active{% endif %}">
+                {{ status_dict.label }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Missions Grid -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            {% for mission in missions %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="mission-card">
+                    <div class="mission-image-container">
+                        {% if mission.mission_image %}
+                        <img src="{{ mission.mission_image.url }}" alt="{{ mission.name }}">
+                        {% else %}
+                        <div class="text-center p-4">
+                            <i class="fas fa-satellite" style="font-size: 100px; color: #ff6b35;"></i>
+                        </div>
+                        {% endif %}
+                        <span class="mission-badge">{{ mission.get_mission_type_display }}</span>
+                        <span class="status-badge status-{{ mission.status }}">
+                            {{ mission.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="mission-card-body">
+                        <h3 class="mission-name">{{ mission.name }}</h3>
+                        {% if mission.full_name %}
+                        <p class="mission-full-name">{{ mission.full_name }}</p>
+                        {% endif %}
+                        <p class="mission-description">{{ mission.description|truncatewords:25 }}</p>
+                        
+                        <div class="mission-meta">
+                            {% if mission.launch_date %}
+                            <div class="meta-item">
+                                <span class="meta-label">Launch:</span>
+                                <span class="meta-value">{{ mission.launch_date|date:"Y" }}</span>
+                            </div>
+                            {% endif %}
+                            {% if mission.rocket_used %}
+                            <div class="meta-item">
+                                <span class="meta-label">Rocket:</span>
+                                <span class="meta-value">{{ mission.rocket_used }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <a href="{% url 'missions:mission_detail' mission.pk %}" class="btn btn-primary w-100">
+                            View Mission Details →
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <p class="lead">No missions found. Add some in the admin panel!</p>
+                    <a href="/admin/missions/mission/add/" class="btn btn-primary">Add Mission</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
