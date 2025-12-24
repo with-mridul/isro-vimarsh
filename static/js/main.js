@@ -77,7 +77,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Loading animation for images
     document.querySelectorAll('img').forEach(img => {
-        img.addEventListener('load', function() {
+        // If image is already loaded (cached), show it immediately
+        if (img.complete) {
+            img.classList.add('loaded');
+            img.style.opacity = '1';
+        } else {
+            // Otherwise wait for load event
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+                this.style.opacity = '1';
+            });
+            
+            // Fallback: show image after 2 seconds even if load event doesn't fire
+            setTimeout(() => {
+                if (!img.classList.contains('loaded')) {
+                    img.classList.add('loaded');
+                    img.style.opacity = '1';
+                }
+            }, 2000);
+        }
+        
+        // Handle image load errors
+        img.addEventListener('error', function() {
+            this.style.opacity = '1';
             this.classList.add('loaded');
         });
     });
