@@ -19,13 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-from decouple import config, Csv
+import os
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-temporary-key-change-in-production')
-DEBUG = config('DEBUG', default=True, cast=bool)
-# Simple string split instead of Csv
-allowed_hosts_str = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
-ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_str.split(',')]
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-temporary-key-for-development')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Application definition
 
